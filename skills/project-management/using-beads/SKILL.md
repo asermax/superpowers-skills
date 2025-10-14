@@ -1,7 +1,7 @@
 ---
 name: Using Beads for Issue Tracking
 description: Dependency-aware task management with bd - track all work, model dependencies, use bd ready for next tasks
-when_to_use: when discovering new work during implementation, when picking up new tasks, when creating issues for features, or when working in codebases using bd for issue tracking
+when_to_use: when starting work in a new codebase, when discovering new work during implementation, when receiving feedback after implementation, when picking up new tasks, when creating issues for features, or when working in codebases using bd for issue tracking
 version: 1.0.0
 dependencies: bd (beads CLI tool)
 ---
@@ -18,6 +18,7 @@ dependencies: bd (beads CLI tool)
 
 Use bd when:
 - Discovering new work while implementing a feature
+- Receiving feedback after completing implementation
 - Finding bugs, missing tests, or documentation issues
 - Planning new features that need task breakdown
 - Looking for next task to work on
@@ -28,8 +29,28 @@ Use bd when:
 - "I'll just fix this quickly without tracking"
 - "I can add dependencies later"
 - "Let me just start coding, I'll document it after"
+- "Partner feedback is just tweaks, I'll fix them now"
 
 ## Core Workflows
+
+### 0. First Time in Codebase → Check for bd Database
+
+**Before using ANY bd commands in a new codebase/directory:**
+
+```bash
+# Check if local bd database exists
+ls .beads/*.db 2>/dev/null
+
+# If no .db file exists in .beads/:
+bd init
+
+# Now you can use bd normally
+bd create "Your first issue"
+```
+
+**Rule:** ALWAYS check for `.beads/*.db` before using bd. Without this check, bd will use a global database instead of project-local tracking.
+
+**Why this matters:** Using the global database mixes issues from different projects, making tracking meaningless.
 
 ### 1. Discovering Work → Create Issue Immediately
 
@@ -61,7 +82,38 @@ bd list  # Wrong - shows all issues, not just ready ones
 
 **`bd ready` shows issues with `status='open'` AND no blocking dependencies.**
 
-### 3. Creating Issues for Features → Model Dependencies
+### 3. Receiving Feedback → Create Issues, Don't Fix Immediately
+
+**When partner provides feedback after implementation:**
+
+```bash
+# Partner says: "This works but the error messages need improvement
+# and the retry logic should be exponential backoff"
+
+# WRONG: Start fixing immediately
+# "I'll just update these quickly since I'm already in the code"
+
+# RIGHT: Create issues first
+bd create "Improve error messages in payment flow"
+bd create "Change retry logic to exponential backoff"
+bd dep add payment-retry-1 payment-impl-1 --type discovered-from
+
+# THEN decide: fix now or later?
+# If fixing now, claim the issues
+bd update payment-errors-1 --status in_progress
+# Work on it
+bd close payment-errors-1
+```
+
+**Feedback = new work. Track it first, THEN decide whether to do it now.**
+
+**Why this matters:**
+- Feedback scope can expand ("quick fix" becomes multi-file refactor)
+- Other priorities may be more urgent (use `bd ready` to decide)
+- Tracking shows real effort, not just "implemented feature"
+- You can model dependencies if feedback reveals blockers
+
+### 4. Creating Issues for Features → Model Dependencies
 
 **When breaking down a feature into tasks:**
 
@@ -102,6 +154,62 @@ bd dep add tests-1 api-endpoint-1 --type related      # tests related but can be
 | **Close issue** | `bd close issue-1` | When work is complete |
 
 ## Common Mistakes
+
+### ❌ Using bd Without Checking for Local Database
+
+**Wrong:**
+```bash
+# Start working in new project directory
+cd /path/to/new-project
+bd create "Implement feature X"
+# Accidentally uses global database, mixing with other projects
+```
+
+**Right:**
+```bash
+# Start working in new project directory
+cd /path/to/new-project
+
+# Check for local database first
+ls .beads/*.db 2>/dev/null || bd init
+
+# Now create issues
+bd create "Implement feature X"
+```
+
+**Why:** Without checking, bd falls back to a global database. Your issues get mixed with unrelated projects, dependencies break, and `bd ready` shows work from everywhere. Always verify `.beads/*.db` exists.
+
+### ❌ Fixing Feedback Immediately Without Tracking
+
+**Wrong:**
+```bash
+# Just finished implementing feature-1
+# Partner: "Can you improve the error messages?"
+# Immediately start editing code without creating issue
+git commit -m "improve error messages based on feedback"
+```
+
+**Right:**
+```bash
+# Just finished implementing feature-1
+# Partner: "Can you improve the error messages?"
+bd create "Improve error messages in feature module"
+bd dep add error-messages-1 feature-1 --type discovered-from
+
+# Now decide: is this the highest priority?
+bd ready  # Check what else is unblocked
+
+# If yes, claim and fix
+bd update error-messages-1 --status in_progress
+# Make changes
+bd close error-messages-1
+```
+
+**Why:** Feedback feels like "quick tweaks" but often expands in scope. Track first so you can:
+- See true effort (not hidden in original feature)
+- Model dependencies if feedback reveals blockers
+- Compare priority with other ready work
+- Prevent "one more thing" spiral where feedback accumulates without visibility
 
 ### ❌ "Too Simple to Track"
 
@@ -172,8 +280,12 @@ bd ready
 - "I can add dependencies tomorrow"
 - "Let me start coding, I'll create issues later"
 - "Creating an issue costs more time than the fix"
+- "Partner feedback is just tweaks, I'll fix them now"
+- "I'm already in this code, might as well update it"
+- "This is follow-up work, not new work"
+- "I'll just use bd, it will work" (without checking for .beads/*.db)
 
-**All of these mean: Create issue NOW. Model dependencies NOW.**
+**All of these mean: Create issue NOW. Model dependencies NOW. Check for local database FIRST.**
 
 ## Real-World Impact
 
