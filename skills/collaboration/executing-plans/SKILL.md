@@ -17,20 +17,20 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 
 ## The Process
 
-### Step 1: Load and Review Plan
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
+### Step 1: Load and Review Issues
+1. List unblocked work: `bd ready` shows issues with no blocking dependencies
+2. Review issues critically - identify any questions or concerns
 3. If concerns: Raise them with your human partner before starting
 4. If no concerns: Create TodoWrite and proceed
 
 ### Step 2: Execute Batch
-**Default: First 3 tasks**
+**Default: First 3 ready issues**
 
-For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
+For each issue from `bd ready`:
+1. Mark as in_progress: `bd update issue-id --status in_progress`
+2. Follow the steps in the issue exactly (beads has bite-sized steps)
 3. Run verifications as specified
-4. Mark as completed
+4. Mark as completed: `bd close issue-id`
 
 ### Step 3: Report
 When batch complete:
@@ -70,9 +70,10 @@ After all tasks complete and verified:
 **Don't force through blockers** - stop and ask.
 
 ## Remember
-- Review plan critically first
-- Follow plan steps exactly
+- Review issues critically first
+- Follow issue steps exactly
 - Don't skip verifications
-- Reference skills when plan says to
+- Reference skills when issue says to
 - Between batches: just report and wait
 - Stop when blocked, don't guess
+- Use `bd ready` to find next unblocked work (see skills/project-management/using-beads)

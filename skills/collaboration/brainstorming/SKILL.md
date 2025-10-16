@@ -46,7 +46,7 @@ Ask: "Ready to create the implementation plan?"
 When your human partner confirms (any affirmative response):
 - Announce: "I'm using the Writing Plans skill to create the implementation plan."
 - Switch to skills/collaboration/writing-plans skill
-- Create detailed plan in the worktree
+- Create beads issues in the worktree with dependencies
 
 ## When to Revisit Earlier Phases
 

@@ -17,8 +17,6 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
-**Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
-
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**
@@ -28,79 +26,41 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 - "Run the tests and make sure they pass" - step
 - "Commit" - step
 
-## Plan Document Header
+## Creating Issues
 
-**Every plan MUST start with this header:**
+Track your implementation plan as beads issues with dependencies:
 
-```markdown
-# [Feature Name] Implementation Plan
+1. **Verify local database:** Check for `.beads/*.db` in the worktree (see skills/project-management/using-beads workflow 0)
 
-> **For Claude:** Use `${SUPERPOWERS_SKILLS_ROOT}/skills/collaboration/executing-plans/SKILL.md` to implement this plan task-by-task.
+2. **Create issues for each task:** For every bite-sized step group, create a beads issue with full context
+   ```bash
+   bd create "Task N: Component Name - [full description with files and steps]"
+   ```
 
-**Goal:** [One sentence describing what this builds]
+3. **Model dependencies:** Link tasks in order (see skills/project-management/using-beads workflow 4)
+   ```bash
+   bd dep add task-2 task-1 --type blocks
+   ```
 
-**Architecture:** [2-3 sentences about approach]
-
-**Tech Stack:** [Key technologies/libraries]
-
----
-```
-
-## Task Structure
-
-```markdown
-### Task N: [Component Name]
-
-**Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
-
-**Step 1: Write the failing test**
-
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
-```
-
-**Step 2: Run test to verify it fails**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
-
-**Step 3: Write minimal implementation**
-
-```python
-def function(input):
-    return expected
-```
-
-**Step 4: Run test to verify it passes**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: PASS
-
-**Step 5: Commit**
-
-```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
-```
-```
+Document in each issue:
+- **Which files** to create/modify
+- **Step-by-step instructions** (write test → run → implement → run → commit)
+- **Exact commands** with expected output
+- **File paths** precisely
+- **Complete code** (not "add validation")
+- Principles: DRY, YAGNI, TDD, frequent commits
 
 ## Remember
-- Exact file paths always
-- Complete code in plan (not "add validation")
-- Exact commands with expected output
-- Reference relevant skills with @ syntax
-- DRY, YAGNI, TDD, frequent commits
+- Tasks are discoverable by `bd ready` for execution
+- Dependencies show what blocks what
+- Reference relevant skills with path format: `skills/category/skill-name`
+- Each issue is one atomic unit of work
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After issues are created and dependencies modeled, offer execution choice:
 
-**"Plan complete and saved to `docs/plans/<filename>.md`. Two execution options:**
+**"Issues created and tracked in beads. Two execution options:**
 
 **1. Subagent-Driven (this session)** - I dispatch fresh subagent per task, review between tasks, fast iteration
 
@@ -116,3 +76,4 @@ After saving the plan, offer execution choice:
 **If Parallel Session chosen:**
 - Guide them to open new session in worktree
 - New session uses skills/collaboration/executing-plans
+- Use `bd ready` to find unblocked work

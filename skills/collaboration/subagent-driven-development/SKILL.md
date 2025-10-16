@@ -31,9 +31,9 @@ Execute plan by dispatching fresh subagent per task, with code review after each
 
 ## The Process
 
-### 1. Load Plan
+### 1. Load Issues
 
-Read plan file, create TodoWrite with all tasks.
+List all issues: `bd list` or find unblocked work: `bd ready`. Create TodoWrite with all tasks from beads (see skills/project-management/using-beads).
 
 ### 2. Execute Task with Subagent
 
@@ -42,13 +42,13 @@ For each task:
 **Dispatch fresh subagent:**
 ```
 Task tool (general-purpose):
-  description: "Implement Task N: [task name]"
+  description: "Implement Issue [issue-id]: [issue description]"
   prompt: |
-    You are implementing Task N from [plan-file].
+    You are implementing issue [issue-id] from beads.
 
-    Read that task carefully. Your job is to:
-    1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
+    Read that issue carefully. Your job is to:
+    1. Implement exactly what the issue specifies
+    2. Write tests (following TDD if issue says to)
     3. Verify implementation works
     4. Commit your work
     5. Report back
@@ -68,10 +68,10 @@ Task tool (code-reviewer):
   Use template at skills/collaboration/requesting-code-review/code-reviewer.md
 
   WHAT_WAS_IMPLEMENTED: [from subagent's report]
-  PLAN_OR_REQUIREMENTS: Task N from [plan-file]
+  PLAN_OR_REQUIREMENTS: Issue [issue-id] from beads
   BASE_SHA: [commit before task]
   HEAD_SHA: [current commit]
-  DESCRIPTION: [task summary]
+  DESCRIPTION: [issue description]
 ```
 
 **Code reviewer returns:** Strengths, Issues (Critical/Important/Minor), Assessment
@@ -113,9 +113,9 @@ After final review passes:
 ```
 You: I'm using Subagent-Driven Development to execute this plan.
 
-[Load plan, create TodoWrite]
+[Load beads issues, create TodoWrite]
 
-Task 1: Hook installation script
+Issue install-hook-1: Hook installation script
 
 [Dispatch implementation subagent]
 Subagent: Implemented install-hook with tests, 5/5 passing
@@ -123,9 +123,9 @@ Subagent: Implemented install-hook with tests, 5/5 passing
 [Get git SHAs, dispatch code-reviewer]
 Reviewer: Strengths: Good test coverage. Issues: None. Ready.
 
-[Mark Task 1 complete]
+[Mark Issue 1 complete in TodoWrite]
 
-Task 2: Recovery modes
+Issue recovery-1: Recovery modes
 
 [Dispatch implementation subagent]
 Subagent: Added verify/repair, 8/8 tests passing
@@ -136,11 +136,11 @@ Reviewer: Strengths: Solid. Issues (Important): Missing progress reporting
 [Dispatch fix subagent]
 Fix subagent: Added progress every 100 conversations
 
-[Verify fix, mark Task 2 complete]
+[Verify fix, mark Issue 2 complete]
 
 ...
 
-[After all tasks]
+[After all issues]
 [Dispatch final code-reviewer]
 Final reviewer: All requirements met, ready to merge
 
@@ -178,7 +178,8 @@ Done!
 ## Integration
 
 **Pairs with:**
-- skills/collaboration/writing-plans (creates the plan)
+- skills/collaboration/writing-plans (creates beads issues)
+- skills/project-management/using-beads (issue tracking with dependencies)
 - skills/collaboration/requesting-code-review (review template)
 - skills/testing/test-driven-development (subagents follow this)
 
