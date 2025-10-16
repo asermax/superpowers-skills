@@ -35,7 +35,9 @@ Before ANY task, check if CLAUDE.md exists in the project root.
 "Reflect on changes and update CLAUDE.md"
 ```
 
-**ALWAYS add this todo FIRST, before researching, coding, or planning.**
+**ALWAYS add this todo AT THE END of your todo list, before researching, coding, or planning.**
+
+**Important:** This todo goes LAST so it runs AFTER all implementation work completes.
 
 **No exceptions:**
 - Not "later if needed"
@@ -43,7 +45,7 @@ Before ANY task, check if CLAUDE.md exists in the project root.
 - Not "unnecessary overhead"
 - Not "after I see what changes"
 
-**Why:** "Later" means "forgotten". Adding the todo takes 10 seconds. Forgetting to update CLAUDE.md wastes hours of future work.
+**Why:** "Later" means "forgotten". Adding the todo takes 10 seconds. Forgetting to update CLAUDE.md wastes hours of future work. Placing it at the end ensures you update documentation after completing the actual work.
 
 ### 3. Process Reflection Todo
 
@@ -81,8 +83,8 @@ CLAUDE.md shows ONLY current state.
 | Situation | Action |
 |-----------|--------|
 | No CLAUDE.md exists | Prompt user to run init command |
-| Starting new task | Add reflection todo BEFORE work |
-| "Update docs" todo exists | ALSO add specific reflection todo |
+| Starting new task | Add reflection todo at END of list BEFORE work |
+| "Update docs" todo exists | ALSO add specific reflection todo at end |
 | Updating CLAUDE.md | Only high-level patterns, delete legacy |
 | Manager says skip process | Add reflection todo anyway (10 seconds) |
 
@@ -102,7 +104,7 @@ Skipping 10 seconds now costs hours later when CLAUDE.md is outdated.
 
 ### ❌ "I can add the reflection todo later if needed"
 "Later" means "forgotten". Always forgotten.
-✅ Fix: Add it FIRST, before research, planning, or coding.
+✅ Fix: Add it at the END of your todo list, before starting research, planning, or coding.
 
 ### ❌ "Documentation can wait until after implementation"
 Waiting means forgetting what decisions were made and why.
